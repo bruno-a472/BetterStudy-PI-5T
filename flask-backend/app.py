@@ -118,7 +118,8 @@ def notas_historicas(id: int):
         # print("Notas históricas obtidas") # Adicionar em caso de testes
 
         historico = [{ "tipo": 'h', "nome": materia, "nota": nota, 'abc': 'D'} for materia, nota in zip(mates, notas)]
-        
+        # for materia in historico:
+        #     if float(materia['nota']) aqquiiiiii
         return historico
     except:
         # print("Os elementos com as notas parciais não foram encontrados.") # Adicionar em caso de testes
@@ -132,11 +133,18 @@ CORS(app)
 def receber_login():
     print('\n\n\n\ndados recebidos para login')
     dados = request.json 
+    print(dados)
     u = dados['usuario']
     s = dados['senha']
     # print(dados)  # Adicionar em caso de testes
     chrome_options = Options()
-    chrome_options.add_experimental_option('detach', True)
+    # chrome_options.add_experimental_option('detach', True)
+
+    chrome_options.add_argument("--headless")  # Ativa o modo headless
+    chrome_options.add_argument("--disable-gpu")  # Necessário em alguns sistemas
+    chrome_options.add_argument("--window-size=1920x1080")  # Define um tamanho padrão para evitar erros
+    chrome_options.add_argument("--no-sandbox")  # Recomendado para rodar em servidores Linux
+    chrome_options.add_argument("--disable-dev-shm-usage")  # Evita erros em contêineres
 
     id = ids.geraId()
     # Inserir primeira árvore que possui Driver
@@ -164,7 +172,7 @@ def scrape_notas():
         "parciais": notas_a,
         "historicas": notas_h
     }
-
+    print(notas)
     notas = json.dumps(notas, ensure_ascii=False, indent=4)
     # print(notas) # Adicionar em caso de testes
     return notas
